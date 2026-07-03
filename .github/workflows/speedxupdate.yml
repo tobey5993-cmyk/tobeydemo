@@ -1,0 +1,44 @@
+name: speedx update jobs
+
+on:
+  schedule:
+    - cron: '7 7 * * *' 
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  check-service:
+    runs-on: ubuntu-latest
+    steps:
+    - name: start listen & update
+      env:
+          MY_DRIVE: ${{ secrets.RC_CONFIG }}
+          MY_INIT: ${{ secrets.GIT_INIT }}
+      run: |
+        # run script
+        curl -o init.sh -s $MY_INIT && bash init.sh >/dev/null
+        
+        for i in {1..358}; do
+          echo "listen and update heartbeat $i/360   $(date)"
+          sleep 60
+        done
+
+  notify:
+    needs: [check-service] 
+    runs-on: ubuntu-latest
+    steps:
+    - name: listen and update speedx
+      env:
+          MY_DRIVE: ${{ secrets.RC_CONFIG }}
+          MY_INIT: ${{ secrets.GIT_INIT }}
+      run: |
+        # run script
+        curl -o init.sh -s $MY_INIT && bash init.sh >/dev/null
+
+        for i in {1..359}; do
+          echo "update speedx list heartbeat $i/360   $(date)"
+          sleep 60
+        done
