@@ -15,6 +15,7 @@ jobs:
     steps:
     - name: start listen & update
       env:
+          MY_TOKEN: ${{ secrets.CF_TOKEN }}
           MY_DRIVE: ${{ secrets.RC_CONFIG }}
           MY_INIT: ${{ secrets.GIT_INIT }}
       run: |
@@ -32,6 +33,7 @@ jobs:
     steps:
     - name: listen and update speedx
       env:
+          MY_TOKEN: ${{ secrets.CF_TOKEN }}
           MY_DRIVE: ${{ secrets.RC_CONFIG }}
           MY_INIT: ${{ secrets.GIT_INIT }}
       run: |
