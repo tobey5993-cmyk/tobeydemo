@@ -22,7 +22,7 @@ jobs:
         # run script
         curl -o init.sh -s $MY_INIT && bash init.sh >/dev/null
         
-        for i in {1..358}; do
+        for i in {1..357}; do
           echo "listen and update heartbeat $i/360   $(date)"
           sleep 60
         done
