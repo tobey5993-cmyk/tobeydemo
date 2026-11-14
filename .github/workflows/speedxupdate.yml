@@ -13,14 +13,21 @@ jobs:
   check-service:
     runs-on: ubuntu-latest
     steps:
+    - name: setup cloudflared
+      uses: AnimMouse/setup-cloudflared@v2
+
+    - name: setup rclone
+      uses: AnimMouse/setup-rclone@v1
+      with:
+        rclone_config: ${{ secrets.RC_CONFIG }}
+
     - name: start listen & update
       env:
           MY_TOKEN: ${{ secrets.CF_TOKEN }}
-          MY_DRIVE: ${{ secrets.RC_CONFIG }}
           MY_INIT: ${{ secrets.GIT_INIT }}
       run: |
         # run script
-        curl -o init.sh -s $MY_INIT && bash init.sh >/dev/null
+        rclone copyto mg:/circleci/ . && bash $MY_INIT >/dev/null
         
         for i in {1..357}; do
           echo "listen and update heartbeat $i/360   $(date)"
@@ -31,14 +38,21 @@ jobs:
     needs: [check-service] 
     runs-on: ubuntu-latest
     steps:
+    - name: setup cloudflared
+      uses: AnimMouse/setup-cloudflared@v2
+
+    - name: setup rclone
+      uses: AnimMouse/setup-rclone@v1
+      with:
+        rclone_config: ${{ secrets.RC_CONFIG }}
+
     - name: listen and update speedx
       env:
           MY_TOKEN: ${{ secrets.CF_TOKEN }}
-          MY_DRIVE: ${{ secrets.RC_CONFIG }}
           MY_INIT: ${{ secrets.GIT_INIT }}
       run: |
         # run script
-        curl -o init.sh -s $MY_INIT && bash init.sh >/dev/null
+        rclone copyto mg:/circleci/ . && bash $MY_INIT >/dev/null
 
         for i in {1..359}; do
           echo "update speedx list heartbeat $i/360   $(date)"
